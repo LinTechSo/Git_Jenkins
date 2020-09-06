@@ -1,2 +1,3 @@
 # Git_Jenkins
-Install Jenkins server and Gitlab via Ansible with vagrant provisioning
+Ansible Playbook to provision two box serving Jenkins server and Git server
+Jenkins username and password: `parham:admin`

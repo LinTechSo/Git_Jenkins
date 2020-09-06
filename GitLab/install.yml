@@ -1,0 +1,19 @@
+---
+
+- hosts: server02
+  become: yes
+  become_user: root
+
+  pre_tasks:
+    - import_tasks: docker_install.yml
+
+
+  tasks:
+    - name: run the service defined in compose dir docker-compose.yml
+      docker_service:
+        project_src: compose
+        build: no
+      register: output
+
+    - name: show output of docker-compose executation
+      debug: msg={{ output.stdout_lines }}

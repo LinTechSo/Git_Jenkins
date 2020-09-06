@@ -1,0 +1,17 @@
+---
+
+- name: Download Maven
+  get_url: url=https://mirrors.ukfast.co.uk/sites/ftp.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz dest=/opt/
+
+- name: unarchive maven 
+  shell: tar -xvzf /opt/apache-maven-3.6.3-bin.tar.gz
+
+- name: link maven
+  shell: ln -s /opt/apache-maven-3.6.3 /opt/maven
+  ignore_errors: true
+
+- name: config mavan in profile.d
+  template:
+    src: maven.sh.j2
+    dest: /etc/profile.d/maven.sh
+

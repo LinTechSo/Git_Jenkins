@@ -1,0 +1,24 @@
+---
+
+- name: cp jenkins war file into tomcat
+  get_url: url=http://mirrors.jenkins.io/war-stable/latest/jenkins.war dest=/opt/tomcat/webapps/jenkins.war
+    
+- name: config jenkins in profile.d
+  template:
+    src: java_opt.sh.j2
+    dest: /etc/profile.d/java_opt.sh
+
+- name: cp jenkins.cer to /opt
+  template: 
+    src: jenkins.cer
+    dest: /opt/jenkins.cer  
+
+- name: mv jenkins  to jenkins home
+  copy:
+    src: jenkins.tar.gz
+    dest: /root/jenkins.tar.gz
+
+- name: extract tar jenkins home
+  command: chdir=/root/ /bin/tar xvf jenkins.tar.gz creates=/root/.jenkins
+
+
