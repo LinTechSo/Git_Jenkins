@@ -1,6 +1,7 @@
 ---
 
-- hosts: server02
+- name: Install  Gitlab via docker-compose
+  hosts: server02
   become: yes
   become_user: root
 
