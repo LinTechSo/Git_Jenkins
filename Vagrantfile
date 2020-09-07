@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     jenkins.ssh.insert_key = false
     jenkins.vm.provider :libvirt do |l|
       l.qemu_use_session = false
-      l.memory = 2048
+      l.memory = 1024
     end
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "jenkins/jenkinsOverTomcat.yml"
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
     git.ssh.insert_key = false
     git.vm.provider :libvirt do |l|
       l.qemu_use_session = false
-      l.memory = 512
+      l.memory = 1024
     end
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "GitLab/install.yml"
