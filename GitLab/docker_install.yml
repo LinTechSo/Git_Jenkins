@@ -47,3 +47,15 @@
 - name: show starting result
   debug: msg={{ result }}
 
+- name: Install Docker Compose
+  shell: curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  
+- name: make docker compose executable
+  command: chmod +x /usr/local/bin/docker-compose
+  
+- name: check if docker compose in installed
+  command: docker-compose --version
+  register: output
+  
+- name: show output
+  debug: msg={{ output.stdout_lines }}
