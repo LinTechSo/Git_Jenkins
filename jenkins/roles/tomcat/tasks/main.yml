@@ -1,17 +1,17 @@
 ---
 
 - name: Download Apache tomcat
-  get_url: url=https://apache.osuosl.org/tomcat/tomcat-9/v9.0.37/bin/apache-tomcat-9.0.37.tar.gz dest=/opt/
+  get_url: url=https://downloads.apache.org/tomcat/tomcat-9/v9.0.38/bin/apache-tomcat-9.0.38.tar.gz dest=/opt/
 
 - name: Extract and Install Tomcat
   unarchive:
-    src: /opt/apache-tomcat-9.0.37.tar.gz
+    src: /opt/apache-tomcat-9.0.38.tar.gz
     dest: /opt/
     remote_src: yes
 
 - name: create Tomcat link 
   file:
-    src: "apache-tomcat-9.0.37"
+    src: "apache-tomcat-9.0.38"
     dest: /opt/tomcat
     state: link
 
