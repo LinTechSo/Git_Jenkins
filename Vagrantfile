@@ -31,6 +31,8 @@ Vagrant.configure("2") do |config|
     config.vm.provision "ansible" do | ansible|
 	ansible.playbook = "GitLab/install.yml"
 	ansible.inventory_path = "inventory/hosts"
+	ansible.limit = "all"
+
     end
   end
 end
