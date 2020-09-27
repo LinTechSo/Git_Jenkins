@@ -7,8 +7,8 @@
   
 
 - name: manage java.sh in profile.d
-  template:
-    src: java.sh.j2
+  copy:
+    src: java.sh
     dest: /etc/profile.d/java.sh
   
 
