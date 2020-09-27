@@ -1,61 +1,71 @@
 ---
 
-- name: install python and dependencies on redhats
-  yum: name=python3-pip state=present  update_cache=yes
-  when: ansible_os_family == "RedHat"
+- hosts: server02
+  become: yes
+  tasks:
+   - name: install python and dependencies on redhats
+     yum: name=python3-pip state=present  update_cache=yes
+     when: ansible_os_family == "RedHat"
 
-- name: install python and dependencies on debians
-  apt: name=python3-pip state=present update_cache=yes
-  when: ansible_os_family == "Debian"
+   - name: install python and dependencies on debians
+     apt: name=python3-pip state=present update_cache=yes
+     when: ansible_os_family == "Debian"
 
-- name: install python modules
-  shell: pip3 install requests
+   - name: install python modules
+     shell: pip3 install requests
 
-- name: install python modules2
-  shell: pip3 install bs4
+   - name: install python modules2
+     shell: pip3 install bs4
 
-- name: copy shecan python script to setting DNS [using shecan.ir ips]
-  copy:
-    src: shecan.py
-    dest: /root/shecan.py
-   
-- name: execute python script and change dns resolve conf file
-  shell: python3 /root/shecan.py
+   - name: copy shecan python script to setting DNS [using shecan.ir ips]
+     copy:
+         src: shecan.py
+         dest: /root/shecan.py
 
-- name: remove old docker in redhat
-  shell: yum remove -y docker-ce && rm -rf /var/lib/docker && yum remove -y docker-ce-cli && yum -y autoremove
-  when: ansible_os_family == "RedHat"
+   - name: execute python script and change dns resolve conf file
+     shell: python3 /root/shecan.py
 
-- name: remove old docker in debians
-  shell:  apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-  when: ansible_os_family == "Debian"
+   - name: remove old docker in redhat
+     shell: yum remove -y docker-ce && rm -rf /var/lib/docker && yum remove -y docker-ce-cli && yum -y autoremove
+     when: ansible_os_family == "RedHat"
 
-- name: replace shecan resolv conf with our default resolv conf
-  shell: mv -f /tmp/resolv.conf /etc/resolv.conf
+   - name: remove old docker in debians
+     shell:  apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+     when: ansible_os_family == "Debian"
+     ignore_errors: true
 
-- name: install docker at end
-  shell: curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
-  register: results
+   - name: replace shecan resolv conf with our default resolv conf
+     shell: mv -f /tmp/resolv.conf /etc/resolv.conf
+     
+   - name: install redhat docker dependencies
+     yum: name={{ item }} state=installed
+     with_items:
+         - yum-utils
+         - lvm2
+         - device-mapper-persistent-data
+         
+   - name: add repo
+     yum_repository:
+         name: docker repo
+         description: docker-ce.repo
+         baseurl: https://download.docker.com/linux/centos/docker-ce.repo
+         enabled: yes
+     when: ansible_os_family == "RedHat"
 
-- name: show results
-  debug: msg={{ results.stdout_lines }} 
+   - name: install docker at end
+     yum: name=docker state=present 
+     when: ansible_os_family == "RedHat"
+
+   - name: install docker on ubuntu
+     apt: name=docker-ce  update_cache=yes force_apt_get=yes cache_valid_time=3600
+     when: ansible_os_family == "Debian"
     
-- name: start docker docker service
-  service: name=docker state=started  enabled=yes
-  register: result
+   - name: start docker docker service
+     service: name=docker state=started  enabled=yes
+     register: result
+     ignore_errors: true
 
-- name: show starting result
-  debug: msg={{ result }}
+   - name: show starting result
+     debug: msg={{ result }}
+     ignore_errors: true
 
-- name: Install Docker Compose
-  shell: curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  
-- name: make docker compose executable
-  command: chmod +x /usr/local/bin/docker-compose
-  
-- name: check if docker compose in installed
-  command: docker-compose --version
-  register: output
-  
-- name: show output
-  debug: msg={{ output.stdout_lines }}
