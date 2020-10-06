@@ -1,5 +1,5 @@
 [server01]
-192.168.122.12 ansible_become_method=su ansible_become_exe="sudo su -"
+192.168.121.12 ansible_become_method=su ansible_become_exe="sudo su -"
 
 [server02]
-192.168.122.11 ansible_become_method=su ansible_become_exe="sudo su -"
+192.168.121.11 ansible_become_method=su ansible_become_exe="sudo su -"
