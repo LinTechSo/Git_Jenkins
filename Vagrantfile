@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "jenkins" do |jenkins|
     jenkins.vm.box = "centos/7"
     jenkins.vm.hostname = "server01"
-    jenkins.vm.network :privarte_network, ip: "192.168.121.12"
+    jenkins.vm.network :private_network, ip: "192.168.121.12"
     jenkins.vm.provision :shell, :inline => "sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config; sudo systemctl restart sshd;", run: "always"
     jenkins.vm.synced_folder ".", "/vagrant", disabled: true
     jenkins.ssh.insert_key = false
